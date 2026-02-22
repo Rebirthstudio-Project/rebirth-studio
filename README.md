@@ -6,132 +6,176 @@
 
 <style>
 :root{
- --bg:#0f0f18;
- --card:#1a1a2e;
- --text:#fff;
- --accent:#8a2be2;
- --glow:0 0 12px #8a2be2;
- transition:0.3s;
-}
-.light{
- --bg:#f5f5fb;
- --card:#ffffff;
- --text:#222;
- --accent:#ff4081;
- --glow:none;
+ --bg:#0b0f1a;
+ --card:rgba(255,255,255,0.05);
+ --text:#ffffff;
+ --accent:#9d4edd;
+ --blur:blur(12px);
+ --border:rgba(255,255,255,0.08);
 }
 
+.light{
+ --bg:#f4f6fb;
+ --card:rgba(255,255,255,0.7);
+ --text:#111;
+ --accent:#ff4081;
+ --border:rgba(0,0,0,0.08);
+}
+
+*{box-sizing:border-box;}
 body{
  margin:0;
- font-family:Arial;
+ font-family:Segoe UI, sans-serif;
  background:var(--bg);
  color:var(--text);
+ transition:0.3s;
 }
 
+/* TOP NAV */
 .topbar{
  display:flex;
- align-items:center;
  justify-content:space-between;
- padding:10px;
+ align-items:center;
+ padding:10px 15px;
+ backdrop-filter:var(--blur);
  background:var(--card);
- box-shadow:var(--glow);
+ border-bottom:1px solid var(--border);
  position:sticky;
  top:0;
- z-index:100;
+ z-index:1000;
 }
 
-.left-section{
+.left{
  display:flex;
  align-items:center;
  gap:10px;
 }
 
-.center-section{
- flex:1;
- text-align:center;
-}
-
-.right-section{
- display:flex;
- align-items:center;
- gap:8px;
+.logo{
+ font-weight:bold;
+ font-size:18px;
 }
 
 .menu-btn{
- font-size:24px;
+ font-size:22px;
  cursor:pointer;
 }
 
-.search{
- width:70%;
- max-width:250px;
- padding:6px;
- border-radius:20px;
- border:none;
+/* RIGHT SIDE */
+.right{
+ display:flex;
+ align-items:center;
+ gap:12px;
 }
 
-button{
- padding:6px 10px;
- border:none;
- border-radius:20px;
- background:var(--accent);
+.icon{
+ position:relative;
+ cursor:pointer;
+ font-size:20px;
+}
+
+.badge{
+ position:absolute;
+ top:-5px;
+ right:-6px;
+ background:red;
  color:white;
- cursor:pointer;
+ font-size:10px;
+ padding:2px 5px;
+ border-radius:10px;
+}
+
+/* SUB NAV */
+.subnav{
+ display:flex;
+ justify-content:center;
+ gap:20px;
+ padding:8px;
+ backdrop-filter:var(--blur);
+ background:var(--card);
+ border-bottom:1px solid var(--border);
  font-size:14px;
 }
 
-button:hover{
- box-shadow:var(--glow);
+.subnav a{
+ text-decoration:none;
+ color:var(--text);
+ opacity:0.8;
+}
+.subnav a:hover{
+ opacity:1;
+ color:var(--accent);
 }
 
+/* SIDEBAR */
 .sidebar{
  position:fixed;
- left:-250px;
  top:0;
- width:250px;
+ left:0;
  height:100%;
+ width:260px;
  background:var(--card);
- padding-top:60px;
- transition:0.3s;
- overflow:auto;
+ backdrop-filter:var(--blur);
+ border-right:1px solid var(--border);
+ transform:translateX(-100%);
+ transition:transform 0.4s cubic-bezier(.77,0,.18,1);
+ padding-top:70px;
+ z-index:999;
+}
+
+.sidebar.open{
+ transform:translateX(0);
 }
 
 .sidebar a{
  display:block;
- padding:12px;
+ padding:12px 20px;
  text-decoration:none;
  color:var(--text);
 }
-
 .sidebar a:hover{
  background:var(--accent);
  color:white;
 }
 
+/* CONTENT */
 .container{
- padding:15px;
+ padding:20px;
 }
 
 .card{
  background:var(--card);
+ backdrop-filter:var(--blur);
  padding:15px;
  border-radius:15px;
  margin-bottom:15px;
- box-shadow:var(--glow);
- animation:fade 0.3s ease;
+ border:1px solid var(--border);
+ animation:fadeUp 0.4s ease;
 }
 
-@keyframes fade{
- from{opacity:0;transform:translateY(10px);}
+@keyframes fadeUp{
+ from{opacity:0;transform:translateY(20px);}
  to{opacity:1;transform:translateY(0);}
 }
 
-img{
- width:100%;
- border-radius:10px;
- margin-top:10px;
+button{
+ padding:6px 12px;
+ border:none;
+ border-radius:20px;
+ background:var(--accent);
+ color:white;
+ cursor:pointer;
 }
 
+/* SEARCH */
+.search{
+ padding:6px 10px;
+ border-radius:20px;
+ border:none;
+ width:150px;
+}
+
+/* POPUP */
 .popup{
  display:none;
  position:fixed;
@@ -139,15 +183,16 @@ img{
  left:50%;
  transform:translate(-50%,-50%);
  background:var(--card);
+ backdrop-filter:var(--blur);
  padding:20px;
  border-radius:15px;
  width:90%;
  max-width:350px;
- box-shadow:var(--glow);
- z-index:200;
+ border:1px solid var(--border);
+ z-index:2000;
 }
 
-input,textarea{
+input{
  width:100%;
  padding:8px;
  border-radius:10px;
@@ -160,147 +205,71 @@ input,textarea{
 <body>
 
 <div class="sidebar" id="sidebar">
- <h3 style="padding-left:15px;">Categories</h3>
- <div id="categoryList"></div>
+ <a href="#">Dashboard</a>
+ <a href="#">Characters</a>
+ <a href="#">World</a>
+ <a href="#">Settings</a>
 </div>
 
+<!-- NAVBAR 1 -->
 <div class="topbar">
-
- <div class="left-section">
+ <div class="left">
    <span class="menu-btn" onclick="toggleMenu()">☰</span>
-   <b>Rebirth Studio</b>
+   <span class="logo">Rebirth Studio</span>
  </div>
 
- <div class="center-section">
-   <input class="search" placeholder="Search..." oninput="search(this.value)">
+ <div class="right">
+   <input class="search" placeholder="Search...">
+   <span class="icon" onclick="showNotif()">🔔
+     <span class="badge" id="notifCount">3</span>
+   </span>
+   <span class="icon" onclick="toggleTheme()">🌙</span>
+   <button onclick="openLogin()">Login</button>
  </div>
+</div>
 
- <div class="right-section">
-   <button onclick="toggleTheme()">🌙</button>
-   <button id="loginBtn" onclick="openAuth()">Login</button>
-   <button id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
- </div>
-
+<!-- NAVBAR 2 -->
+<div class="subnav">
+ <a href="#">Home</a>
+ <a href="#">Explore</a>
+ <a href="#">Trending</a>
+ <a href="#">Community</a>
 </div>
 
 <div class="container">
- <button id="addBtn" style="display:none" onclick="openPagePopup()">+ Add Page</button>
- <div id="contentArea"></div>
+ <div class="card">
+   <h2>Welcome to Rebirth Studio</h2>
+   <p>Premium fandom system UI with smooth animation.</p>
+ </div>
 </div>
 
-<!-- Auth -->
-<div class="popup" id="authPopup">
+<!-- LOGIN POPUP -->
+<div class="popup" id="loginPopup">
  <h3>Login</h3>
- <input id="user" placeholder="Username">
- <input id="pass" type="password" placeholder="Password">
- <button onclick="login()">Login</button>
- <button onclick="closeAuth()">Cancel</button>
-</div>
-
-<!-- Page -->
-<div class="popup" id="pagePopup">
- <h3>Create Page</h3>
- <input id="title" placeholder="Title">
- <textarea id="desc" placeholder="Description"></textarea>
- <input type="file" id="img">
- <button onclick="savePage()">Save</button>
- <button onclick="closePagePopup()">Cancel</button>
+ <input placeholder="Username">
+ <input type="password" placeholder="Password">
+ <button onclick="closeLogin()">Login</button>
 </div>
 
 <script>
-const OWNER_PASSWORD="Rebirth999";
-
-let currentUser=null;
-let data=JSON.parse(localStorage.getItem("rebirthData"))||{};
-let currentCategory=null;
-
-function saveAll(){
- localStorage.setItem("rebirthData",JSON.stringify(data));
-}
-
 function toggleMenu(){
- sidebar.style.left=sidebar.style.left==="0px"?"-250px":"0px";
+ sidebar.classList.toggle("open");
 }
 
 function toggleTheme(){
  document.body.classList.toggle("light");
 }
 
-function openAuth(){authPopup.style.display="block";}
-function closeAuth(){authPopup.style.display="none";}
-
-function login(){
- if(user.value==="owner"&&pass.value===OWNER_PASSWORD){
-  currentUser="owner";
-  addBtn.style.display="block";
- }
- loginBtn.style.display="none";
- logoutBtn.style.display="block";
- closeAuth();
+function openLogin(){
+ loginPopup.style.display="block";
+}
+function closeLogin(){
+ loginPopup.style.display="none";
 }
 
-function logout(){
- currentUser=null;
- loginBtn.style.display="block";
- logoutBtn.style.display="none";
- addBtn.style.display="none";
+function showNotif(){
+ alert("You have 3 notifications.");
 }
-
-function openPagePopup(){
- if(!currentUser)return alert("Login first");
- pagePopup.style.display="block";
-}
-
-function closePagePopup(){
- pagePopup.style.display="none";
-}
-
-function savePage(){
- let file=img.files[0];
- let reader=new FileReader();
- reader.onload=function(e){
-  if(!data["General"])data["General"]={items:[]};
-  data["General"].items.push({
-   title:title.value,
-   desc:desc.value,
-   img:file?e.target.result:null
-  });
-  saveAll();
-  display();
-  closePagePopup();
- };
- if(file)reader.readAsDataURL(file);
- else reader.onload({target:{result:null}});
-}
-
-function display(){
- contentArea.innerHTML="";
- if(!data["General"])return;
- data["General"].items.forEach(item=>{
-  contentArea.innerHTML+=`
-   <div class="card">
-    <h2>${item.title}</h2>
-    <p>${item.desc}</p>
-    ${item.img?`<img src="${item.img}">`:""}
-   </div>`;
- });
-}
-
-function search(text){
- if(!data["General"])return;
- contentArea.innerHTML="";
- data["General"].items
- .filter(p=>p.title.toLowerCase().includes(text.toLowerCase()))
- .forEach(p=>{
-  contentArea.innerHTML+=`
-   <div class="card">
-    <h2>${p.title}</h2>
-    <p>${p.desc}</p>
-   </div>`;
- });
-}
-
-display();
 </script>
 
 </body>
