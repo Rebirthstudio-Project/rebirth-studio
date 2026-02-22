@@ -2,23 +2,23 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rebirth Studio</title>
+<title>Rebirth Studio Wiki</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:#0a0a12;
-  color:white;
+  background:#0f0f18;
+  color:#eee;
 }
 
-/* TOPBAR */
+/* TOP BAR */
 .topbar{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  background:#111;
-  padding:12px 15px;
+  justify-content:space-between;
+  background:#1a1a2e;
+  padding:12px 20px;
   position:fixed;
   width:100%;
   top:0;
@@ -27,193 +27,135 @@ body{
 
 .logo{
   font-weight:bold;
+  font-size:18px;
 }
 
-.icon{
-  font-size:20px;
-  cursor:pointer;
-  margin-left:15px;
+.search input{
+  padding:6px;
+  border-radius:6px;
+  border:none;
 }
 
-/* SIDEMENU */
-.sidemenu{
+/* LAYOUT */
+.container{
+  display:flex;
+  margin-top:60px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:#141425;
+  height:100vh;
+  padding-top:20px;
   position:fixed;
-  left:-250px;
-  top:0;
-  width:250px;
-  height:100%;
-  background:#1a1a2e;
-  padding-top:60px;
-  transition:0.3s;
-  z-index:999;
 }
 
-.sidemenu a{
+.sidebar a{
   display:block;
-  padding:12px 20px;
+  padding:10px 15px;
+  color:#ccc;
   text-decoration:none;
+}
+
+.sidebar a:hover{
+  background:#8a2be2;
   color:white;
 }
 
-.sidemenu a:hover{
-  background:#8a2be2;
-}
-
-/* SEARCH */
-.searchbox{
-  display:none;
-  padding:10px;
-  background:#111;
-  margin-top:55px;
-}
-
-.searchbox input{
-  width:100%;
-  padding:8px;
-  border-radius:8px;
-  border:none;
-}
-
-/* CONTENT */
-.content{
-  padding:80px 20px 20px 20px;
-}
-
-.page{
-  display:none;
-}
-
-.active{
-  display:block;
-}
-
-/* LOGIN POPUP */
-.popup{
-  display:none;
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:#1a1a2e;
+/* MAIN CONTENT */
+.main{
+  margin-left:220px;
   padding:20px;
-  border-radius:15px;
-  z-index:2000;
+  max-width:900px;
+}
+
+/* INFOBOX */
+.infobox{
+  float:right;
   width:250px;
+  background:#1a1a2e;
+  padding:15px;
+  border-radius:10px;
+  margin:10px;
 }
 
-.popup input{
-  width:100%;
-  padding:8px;
-  margin:5px 0;
-  border-radius:8px;
-  border:none;
+.infobox h3{
+  margin-top:0;
+  text-align:center;
 }
 
-.popup button{
-  width:100%;
-  padding:8px;
-  background:#8a2be2;
-  border:none;
-  border-radius:8px;
-  color:white;
-  cursor:pointer;
+.section{
+  margin-bottom:20px;
+}
+
+h1,h2{
+  border-bottom:1px solid #444;
+  padding-bottom:5px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="sidemenu" id="menu">
-  <a onclick="showPage('home')">Home</a>
-  <a onclick="showPage('characters')">Characters</a>
-  <a onclick="showPage('world')">World</a>
-  <a onclick="showPage('gallery')">Gallery</a>
-  <a onclick="showPage('news')">News</a>
-  <a onclick="showPage('community')">Community</a>
-</div>
-
 <div class="topbar">
-  <div>
-    <span class="icon" onclick="toggleMenu()">☰</span>
-    <span class="logo">Rebirth Studio</span>
-  </div>
-  <div>
-    <span class="icon" onclick="toggleSearch()">🔍</span>
-    <span class="icon" onclick="openLogin()">👤</span>
+  <div class="logo">Rebirth Studio Wiki</div>
+  <div class="search">
+    <input type="text" placeholder="Search Wiki...">
   </div>
 </div>
 
-<div class="searchbox" id="search">
-  <input type="text" placeholder="Search...">
+<div class="container">
+
+  <div class="sidebar">
+    <a href="#">Main Page</a>
+    <a href="#">Characters</a>
+    <a href="#">World</a>
+    <a href="#">Gallery</a>
+    <a href="#">News</a>
+    <a href="#">Community</a>
+  </div>
+
+  <div class="main">
+
+    <h1>Ken</h1>
+
+    <div class="infobox">
+      <h3>Ken</h3>
+      <p><b>Title:</b> Celestial Prodigy</p>
+      <p><b>Affiliation:</b> Royal Academy</p>
+      <p><b>Power:</b> Sun Flame Core</p>
+      <p><b>Status:</b> Alive</p>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        Ken เป็นตัวเอกของจักรวาล Rebirth Studio 
+        ผู้ครอบครองพลังสุริยะขั้นสูงและมีเส้นทางสู่การเป็นจักรพรรดิแห่ง Celestial Realm
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Abilities</h2>
+      <ul>
+        <li>Solar Burst</li>
+        <li>Heavenly Ascension</li>
+        <li>Void Resistance</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Story</h2>
+      <p>
+        Ken เริ่มต้นจากนักเรียนธรรมดาใน Royal Academy 
+        ก่อนค้นพบพลัง Sun Flame Core ที่เปลี่ยนชะตาของเขาไปตลอดกาล
+      </p>
+    </div>
+
+  </div>
+
 </div>
-
-<div class="content">
-
-  <div id="home" class="page active">
-    <h2>Welcome</h2>
-    <p>จักรวาล Rebirth Studio เริ่มต้นใหม่ทุกมิติ</p>
-  </div>
-
-  <div id="characters" class="page">
-    <h2>Characters</h2>
-    <p>Ken • Feilong • Sun Void</p>
-  </div>
-
-  <div id="world" class="page">
-    <h2>World</h2>
-    <p>Celestial Realm • Royal Academy • Void Dimension</p>
-  </div>
-
-  <div id="gallery" class="page">
-    <h2>Gallery</h2>
-    <p>Artwork & Illustrations</p>
-  </div>
-
-  <div id="news" class="page">
-    <h2>News</h2>
-    <p>Season ใหม่กำลังพัฒนา</p>
-  </div>
-
-  <div id="community" class="page">
-    <h2>Community</h2>
-    <p>Discord • Instagram • Fandom Wiki</p>
-  </div>
-
-</div>
-
-<!-- LOGIN POPUP -->
-<div class="popup" id="loginPopup">
-  <h3>Login</h3>
-  <input type="text" placeholder="Username">
-  <input type="password" placeholder="Password">
-  <button onclick="closeLogin()">Login</button>
-</div>
-
-<script>
-function toggleMenu(){
-  let menu=document.getElementById("menu");
-  menu.style.left = menu.style.left==="0px" ? "-250px":"0px";
-}
-
-function toggleSearch(){
-  let s=document.getElementById("search");
-  s.style.display = s.style.display==="block" ? "none":"block";
-}
-
-function showPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  toggleMenu();
-}
-
-function openLogin(){
-  document.getElementById("loginPopup").style.display="block";
-}
-
-function closeLogin(){
-  document.getElementById("loginPopup").style.display="none";
-}
-</script>
 
 </body>
 </html>
