@@ -7,104 +7,46 @@
 <style>
 :root{
  --bg:#0b0f1a;
- --card:rgba(255,255,255,0.05);
- --text:#ffffff;
+ --card:rgba(255,255,255,0.06);
+ --text:#fff;
  --accent:#9d4edd;
- --blur:blur(12px);
  --border:rgba(255,255,255,0.08);
 }
 
 .light{
  --bg:#f4f6fb;
- --card:rgba(255,255,255,0.7);
+ --card:rgba(255,255,255,0.8);
  --text:#111;
  --accent:#ff4081;
  --border:rgba(0,0,0,0.08);
 }
 
-*{box-sizing:border-box;}
+*{box-sizing:border-box;margin:0;padding:0;}
+
 body{
- margin:0;
- font-family:Segoe UI, sans-serif;
+ font-family:Segoe UI;
  background:var(--bg);
  color:var(--text);
  transition:0.3s;
 }
 
-/* TOP NAV */
+/* HEADER */
 .topbar{
  display:flex;
- justify-content:space-between;
  align-items:center;
- padding:10px 15px;
- backdrop-filter:var(--blur);
+ justify-content:space-between;
+ padding:12px 15px;
  background:var(--card);
+ backdrop-filter:blur(10px);
  border-bottom:1px solid var(--border);
  position:sticky;
  top:0;
  z-index:1000;
 }
 
-.left{
- display:flex;
- align-items:center;
- gap:10px;
-}
-
-.logo{
- font-weight:bold;
- font-size:18px;
-}
-
 .menu-btn{
  font-size:22px;
  cursor:pointer;
-}
-
-/* RIGHT SIDE */
-.right{
- display:flex;
- align-items:center;
- gap:12px;
-}
-
-.icon{
- position:relative;
- cursor:pointer;
- font-size:20px;
-}
-
-.badge{
- position:absolute;
- top:-5px;
- right:-6px;
- background:red;
- color:white;
- font-size:10px;
- padding:2px 5px;
- border-radius:10px;
-}
-
-/* SUB NAV */
-.subnav{
- display:flex;
- justify-content:center;
- gap:20px;
- padding:8px;
- backdrop-filter:var(--blur);
- background:var(--card);
- border-bottom:1px solid var(--border);
- font-size:14px;
-}
-
-.subnav a{
- text-decoration:none;
- color:var(--text);
- opacity:0.8;
-}
-.subnav a:hover{
- opacity:1;
- color:var(--accent);
 }
 
 /* SIDEBAR */
@@ -113,145 +55,119 @@ body{
  top:0;
  left:0;
  height:100%;
- width:260px;
+ width:280px;
  background:var(--card);
- backdrop-filter:var(--blur);
+ backdrop-filter:blur(15px);
  border-right:1px solid var(--border);
  transform:translateX(-100%);
  transition:transform 0.4s cubic-bezier(.77,0,.18,1);
  padding-top:70px;
  z-index:999;
+ overflow:auto;
 }
 
 .sidebar.open{
  transform:translateX(0);
 }
 
-.sidebar a{
+.sidebar button{
  display:block;
- padding:12px 20px;
- text-decoration:none;
- color:var(--text);
-}
-.sidebar a:hover{
+ width:90%;
+ margin:10px auto;
+ padding:10px;
+ border:none;
+ border-radius:10px;
  background:var(--accent);
  color:white;
+ cursor:pointer;
 }
 
-/* CONTENT */
 .container{
  padding:20px;
 }
 
 .card{
  background:var(--card);
- backdrop-filter:var(--blur);
  padding:15px;
  border-radius:15px;
  margin-bottom:15px;
  border:1px solid var(--border);
- animation:fadeUp 0.4s ease;
 }
 
-@keyframes fadeUp{
- from{opacity:0;transform:translateY(20px);}
- to{opacity:1;transform:translateY(0);}
-}
-
-button{
- padding:6px 12px;
- border:none;
- border-radius:20px;
- background:var(--accent);
- color:white;
- cursor:pointer;
-}
-
-/* SEARCH */
-.search{
- padding:6px 10px;
- border-radius:20px;
- border:none;
- width:150px;
-}
-
-/* POPUP */
-.popup{
+/* SETTINGS SLIDE PANEL */
+.settings{
  display:none;
- position:fixed;
- top:50%;
- left:50%;
- transform:translate(-50%,-50%);
- background:var(--card);
- backdrop-filter:var(--blur);
- padding:20px;
- border-radius:15px;
- width:90%;
- max-width:350px;
- border:1px solid var(--border);
- z-index:2000;
+ margin-top:15px;
 }
 
-input{
+.setting-item{
+ margin-bottom:15px;
+}
+
+input[type="range"]{
  width:100%;
- padding:8px;
- border-radius:10px;
- border:none;
- margin:5px 0;
+}
+
+input[type="file"]{
+ margin-top:5px;
+}
+
+img{
+ width:100%;
+ border-radius:12px;
+ margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="sidebar" id="sidebar">
- <a href="#">Dashboard</a>
- <a href="#">Characters</a>
- <a href="#">World</a>
- <a href="#">Settings</a>
-</div>
-
-<!-- NAVBAR 1 -->
 <div class="topbar">
- <div class="left">
-   <span class="menu-btn" onclick="toggleMenu()">☰</span>
-   <span class="logo">Rebirth Studio</span>
- </div>
-
- <div class="right">
-   <input class="search" placeholder="Search...">
-   <span class="icon" onclick="showNotif()">🔔
-     <span class="badge" id="notifCount">3</span>
-   </span>
-   <span class="icon" onclick="toggleTheme()">🌙</span>
-   <button onclick="openLogin()">Login</button>
- </div>
+ <span class="menu-btn" onclick="toggleMenu()">☰</span>
+ <span id="siteTitle">Rebirth Studio</span>
 </div>
 
-<!-- NAVBAR 2 -->
-<div class="subnav">
- <a href="#">Home</a>
- <a href="#">Explore</a>
- <a href="#">Trending</a>
- <a href="#">Community</a>
+<div class="sidebar" id="sidebar">
+ <button onclick="toggleTheme()">🌙 Toggle Theme</button>
+ <button onclick="showSettings()">⚙ Settings</button>
+ <button onclick="loginOwner()">👑 Owner Login</button>
 </div>
 
 <div class="container">
- <div class="card">
-   <h2>Welcome to Rebirth Studio</h2>
-   <p>Premium fandom system UI with smooth animation.</p>
- </div>
-</div>
 
-<!-- LOGIN POPUP -->
-<div class="popup" id="loginPopup">
- <h3>Login</h3>
- <input placeholder="Username">
- <input type="password" placeholder="Password">
- <button onclick="closeLogin()">Login</button>
+ <div id="bannerArea"></div>
+
+ <div class="card">
+   <h2>Welcome</h2>
+   <p>Simple premium mobile layout.</p>
+ </div>
+
+ <!-- SETTINGS PANEL -->
+ <div class="card settings" id="settingsPanel">
+   <h3>Settings</h3>
+
+   <div class="setting-item">
+     <label>Accent Strength</label>
+     <input type="range" min="0" max="20" value="9" oninput="changeAccent(this.value)">
+   </div>
+
+   <div class="setting-item">
+     <label>Font Size</label>
+     <input type="range" min="14" max="22" value="16" oninput="changeFont(this.value)">
+   </div>
+
+   <div class="setting-item" id="ownerUpload" style="display:none;">
+     <label>Upload Banner (Owner)</label>
+     <input type="file" onchange="uploadBanner(event)">
+   </div>
+
+ </div>
+
 </div>
 
 <script>
+let owner=false;
+
 function toggleMenu(){
  sidebar.classList.toggle("open");
 }
@@ -260,16 +176,49 @@ function toggleTheme(){
  document.body.classList.toggle("light");
 }
 
-function openLogin(){
- loginPopup.style.display="block";
-}
-function closeLogin(){
- loginPopup.style.display="none";
+function showSettings(){
+ settingsPanel.style.display=
+ settingsPanel.style.display==="block"?"none":"block";
 }
 
-function showNotif(){
- alert("You have 3 notifications.");
+function changeAccent(value){
+ document.documentElement.style.setProperty("--accent",
+ `hsl(${value*18},70%,55%)`);
 }
+
+function changeFont(size){
+ document.body.style.fontSize=size+"px";
+}
+
+function loginOwner(){
+ let pass=prompt("Enter owner password:");
+ if(pass==="Rebirth999"){
+  owner=true;
+  alert("Owner mode enabled");
+  ownerUpload.style.display="block";
+ }else{
+  alert("Wrong password");
+ }
+}
+
+function uploadBanner(event){
+ let reader=new FileReader();
+ reader.onload=function(e){
+  localStorage.setItem("bannerImage",e.target.result);
+  showBanner();
+ };
+ reader.readAsDataURL(event.target.files[0]);
+}
+
+function showBanner(){
+ let imgData=localStorage.getItem("bannerImage");
+ if(imgData){
+  bannerArea.innerHTML=
+  `<img src="${imgData}">`;
+ }
+}
+
+showBanner();
 </script>
 
 </body>
