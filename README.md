@@ -16,17 +16,19 @@ body{margin:0;font-family:Arial;background:#0f0f18;color:white;}
 .menu-btn{font-size:22px;cursor:pointer;}
 .sidebar{
   position:fixed;
-  left:-250px;
+  left:-260px;
   top:0;
-  width:250px;
+  width:260px;
   height:100%;
   background:#141425;
   padding-top:60px;
   transition:0.3s;
+  overflow:auto;
 }
+.sidebar h3{padding-left:12px;}
 .sidebar a{
   display:block;
-  padding:12px;
+  padding:10px;
   text-decoration:none;
   color:white;
 }
@@ -65,15 +67,18 @@ img{max-width:100%;border-radius:8px;margin:10px 0;}
   padding:20px;
   border-radius:10px;
   width:300px;
+  z-index:1000;
 }
 </style>
 </head>
-
 <body>
 
 <div class="sidebar" id="sidebar">
-  <a onclick="showPage('home')">Home</a>
-  <a onclick="showPage('characters')">Characters</a>
+  <h3>Categories</h3>
+  <div id="categoryList"></div>
+  <div id="ownerCategoryBtn" style="display:none;padding:10px;">
+    <button onclick="openCategoryForm()">+ Add Category</button>
+  </div>
 </div>
 
 <div class="topbar">
@@ -83,134 +88,168 @@ img{max-width:100%;border-radius:8px;margin:10px 0;}
     <span id="ownerLabel"></span>
   </div>
   <div>
-    <input type="text" id="searchBox" placeholder="Search..." oninput="searchCharacter()">
+    <input type="text" id="searchBox" placeholder="Search..." oninput="searchContent()">
     <button onclick="ownerLogin()">Owner</button>
-    <button id="createBtn" onclick="openForm()" style="display:none;">+ Create</button>
+    <button id="addContentBtn" onclick="openContentForm()" style="display:none;">+ Add</button>
     <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
   </div>
 </div>
 
 <div class="container">
-
-  <div id="homePage">
-    <h2>Welcome to Rebirth Studio</h2>
-    <p>จักรวาลใหม่กำลังเริ่มต้น...</p>
-  </div>
-
-  <div id="charactersPage" style="display:none;">
-    <div id="characterList"></div>
-  </div>
-
+  <div id="contentArea"></div>
 </div>
 
-<div class="popup" id="formPopup">
-  <h3 id="formTitle">Create Character</h3>
-  <input type="text" id="name" placeholder="Name">
-  <input type="text" id="title" placeholder="Title">
+<!-- CATEGORY FORM -->
+<div class="popup" id="categoryPopup">
+  <h3>New Category</h3>
+  <input type="text" id="categoryName" placeholder="Category Name">
+  <button onclick="saveCategory()">Save</button>
+  <button onclick="closeCategoryForm()">Cancel</button>
+</div>
+
+<!-- CONTENT FORM -->
+<div class="popup" id="contentPopup">
+  <h3 id="contentTitle">Add Content</h3>
+  <input type="text" id="contentName" placeholder="Title">
   <input type="file" id="imageInput" accept="image/*">
-  <textarea id="desc" placeholder="Description"></textarea>
-  <button onclick="saveCharacter()">Save</button>
-  <button onclick="closeForm()">Cancel</button>
+  <textarea id="contentDesc" placeholder="Description"></textarea>
+  <button onclick="saveContent()">Save</button>
+  <button onclick="closeContentForm()">Cancel</button>
 </div>
 
 <script>
 const OWNER_PASSWORD="Rebirth999";
 let isOwner=false;
+let currentCategory=null;
 let editIndex=null;
-let characters=JSON.parse(localStorage.getItem("rebirthChars"))||[];
+
+let data=JSON.parse(localStorage.getItem("rebirthData"))||{};
 
 function toggleMenu(){
   let s=document.getElementById("sidebar");
-  s.style.left=s.style.left==="0px"?"-250px":"0px";
-}
-
-function showPage(page){
-  document.getElementById("homePage").style.display=page==="home"?"block":"none";
-  document.getElementById("charactersPage").style.display=page==="characters"?"block":"none";
-  toggleMenu();
+  s.style.left=s.style.left==="0px"?"-260px":"0px";
 }
 
 function ownerLogin(){
   let pass=prompt("Enter Owner Password:");
   if(pass===OWNER_PASSWORD){
     isOwner=true;
-    document.getElementById("createBtn").style.display="inline-block";
-    document.getElementById("logoutBtn").style.display="inline-block";
-    document.getElementById("ownerLabel").innerHTML=" 👑";
-    displayCharacters();
+    ownerLabel.innerHTML=" 👑";
+    addContentBtn.style.display="inline-block";
+    logoutBtn.style.display="inline-block";
+    ownerCategoryBtn.style.display="block";
+    renderCategories();
   }else alert("Wrong Password");
 }
 
 function logout(){
   isOwner=false;
-  document.getElementById("createBtn").style.display="none";
-  document.getElementById("logoutBtn").style.display="none";
-  document.getElementById("ownerLabel").innerHTML="";
-  displayCharacters();
+  ownerLabel.innerHTML="";
+  addContentBtn.style.display="none";
+  logoutBtn.style.display="none";
+  ownerCategoryBtn.style.display="none";
+  renderCategories();
 }
 
-function openForm(index=null){
-  editIndex=index;
-  document.getElementById("formPopup").style.display="block";
-  if(index!==null){
-    let c=characters[index];
-    name.value=c.name;
-    title.value=c.title;
-    desc.value=c.desc;
-  }else{
-    name.value="";title.value="";desc.value="";
+function openCategoryForm(){
+  categoryPopup.style.display="block";
+}
+function closeCategoryForm(){
+  categoryPopup.style.display="none";
+}
+
+function saveCategory(){
+  let name=categoryName.value;
+  if(!name)return;
+  if(!data[name]) data[name]=[];
+  localStorage.setItem("rebirthData",JSON.stringify(data));
+  renderCategories();
+  closeCategoryForm();
+}
+
+function renderCategories(){
+  categoryList.innerHTML="";
+  for(let cat in data){
+    categoryList.innerHTML+=`
+      <a onclick="openCategory('${cat}')">${cat}</a>
+    `;
   }
 }
 
-function closeForm(){formPopup.style.display="none";}
+function openCategory(cat){
+  currentCategory=cat;
+  displayContent();
+  toggleMenu();
+}
 
-function saveCharacter(){
+function openContentForm(index=null){
+  if(!currentCategory){alert("Select category first");return;}
+  editIndex=index;
+  contentPopup.style.display="block";
+  if(index!==null){
+    let item=data[currentCategory][index];
+    contentName.value=item.name;
+    contentDesc.value=item.desc;
+  }else{
+    contentName.value="";
+    contentDesc.value="";
+  }
+}
+
+function closeContentForm(){
+  contentPopup.style.display="none";
+}
+
+function saveContent(){
   let file=imageInput.files[0];
   let reader=new FileReader();
   reader.onload=function(e){
-    let imgData=file?e.target.result:(editIndex!==null?characters[editIndex].img:null);
-    let newChar={name:name.value,title:title.value,desc:desc.value,img:imgData};
-    if(editIndex!==null)characters[editIndex]=newChar;
-    else characters.push(newChar);
-    localStorage.setItem("rebirthChars",JSON.stringify(characters));
-    displayCharacters();
-    closeForm();
+    let imgData=file?e.target.result:(editIndex!==null?data[currentCategory][editIndex].img:null);
+    let newItem={name:contentName.value,desc:contentDesc.value,img:imgData};
+    if(editIndex!==null)
+      data[currentCategory][editIndex]=newItem;
+    else
+      data[currentCategory].push(newItem);
+    localStorage.setItem("rebirthData",JSON.stringify(data));
+    displayContent();
+    closeContentForm();
   };
   if(file)reader.readAsDataURL(file);
   else reader.onload({target:{result:null}});
 }
 
-function deleteCharacter(i){
+function deleteContent(i){
   if(!isOwner)return;
-  characters.splice(i,1);
-  localStorage.setItem("rebirthChars",JSON.stringify(characters));
-  displayCharacters();
+  data[currentCategory].splice(i,1);
+  localStorage.setItem("rebirthData",JSON.stringify(data));
+  displayContent();
 }
 
-function displayCharacters(filter=""){
-  let list=document.getElementById("characterList");
-  list.innerHTML="";
-  characters.forEach((c,i)=>{
-    if(c.name.toLowerCase().includes(filter.toLowerCase())){
-      list.innerHTML+=`
-      <div class="card">
-        <h2>${c.name}</h2>
-        <p><b>${c.title}</b></p>
-        ${c.img?`<img src="${c.img}">`:""}
-        <p>${c.desc}</p>
-        ${isOwner?`
-          <button onclick="openForm(${i})">Edit</button>
-          <button onclick="deleteCharacter(${i})">Delete</button>`:""}
-      </div>`;
+function displayContent(filter=""){
+  contentArea.innerHTML="";
+  if(!currentCategory)return;
+  data[currentCategory].forEach((item,i)=>{
+    if(item.name.toLowerCase().includes(filter.toLowerCase())){
+      contentArea.innerHTML+=`
+        <div class="card">
+          <h2>${item.name}</h2>
+          ${item.img?`<img src="${item.img}">`:""}
+          <p>${item.desc}</p>
+          ${isOwner?`
+            <button onclick="openContentForm(${i})">Edit</button>
+            <button onclick="deleteContent(${i})">Delete</button>
+          `:""}
+        </div>
+      `;
     }
   });
 }
 
-function searchCharacter(){
-  displayCharacters(searchBox.value);
+function searchContent(){
+  displayContent(searchBox.value);
 }
 
-displayCharacters();
+renderCategories();
 </script>
 
 </body>
